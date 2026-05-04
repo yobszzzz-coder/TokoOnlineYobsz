@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toko Online Yobsz</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* ===== WARNA UTAMA - TEMA DARK PURPLE + ANIMASI ===== */
+        :root {
+            --ungu-gelap: rgba(30, 9, 62, 1);
+            --ungu-sedang: rgba(76, 29, 149, 1);
+            --ungu-muda: rgba(124, 58, 237, 1);
+            --ungu-cerah: rgba(168, 85, 247, 1);
+            --ungu-transparan: rgba(124, 58, 237, 0.15);
+            --ungu-sangat-transparan: rgba(168, 85, 247, 0.3);
+            --putih: rgba(255, 255, 255, 1);
+        }
+
+        body {
+            background-color: var(--ungu-gelap);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ===== ANIMASI AURA UNGU BERGERAK ===== */
+        .aura-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .aura {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: bergerakAura 12s infinite ease-in-out alternate;
+        }
+
+        .aura-1 {
+            background: var(--ungu-muda);
+            width: 400px;
+            height: 400px;
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .aura-2 {
+            background: var(--ungu-sedang);
+            width: 350px;
+            height: 350px;
+            bottom: -80px;
+            right: -80px;
+            animation-delay: -4s;
+        }
+
+        .aura-3 {
+            background: var(--ungu-cerah);
+            width: 300px;
+            height: 300px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -8s;
+        }
+
+        @keyframes bergerakAura {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.5;
+            }
+            25% {
+                transform: translate(50px, -30px) scale(1.1);
+                opacity: 0.7;
+            }
+            50% {
+                transform: translate(0, 40px) scale(0.95);
+                opacity: 0.55;
+            }
+            75% {
+                transform: translate(-40px, -20px) scale(1.05);
+                opacity: 0.65;
+            }
+            100% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.6;
+            }
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            background: linear-gradient(135deg, var(--ungu-sedang), var(--ungu-muda));
+            color: var(--putih);
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 4px 15px var(--ungu-transparan);
+            position: relative;
+            z-index: 2;
+            border-bottom: 1px solid var(--ungu-sangat-transparan);
+        }
+
+        header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px var(--ungu-sangat-transparan);
+        }
+
+        /* ===== KOTAK PENCARIAN ===== */
+        .kontainer-pencarian {
+            max-width: 600px;
+            margin: 25px auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .kotak-cari {
+            width: 100%;
+            padding: 13px 22px;
+            border: 2px solid var(--ungu-muda);
+            background-color: rgba(255,255,255,0.9);
+            color: var(--ungu-gelap);
+            border-radius: 30px;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .kotak-cari::placeholder {
+            color: var(--ungu-sedang);
+        }
+
+        .kotak-cari:focus {
+            box-shadow: 0 0 20px var(--ungu-muda);
+            background-color: var(--putih);
+            border-color: var(--ungu-cerah);
+        }
+
+        .info-hasil {
+            text-align: center;
+            color: var(--putih);
+            margin: 10px 0;
+            font-size: 14px;
+            opacity: 0.9;
+            text-shadow: 0 0 5px rgba(0,0,0,0.3);
+        }
+
+        /* ===== KONTAINER PRODUK ===== */
+        .kontainer-produk {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .kartu-produk {
+            background-color: rgba(255, 255, 255, 0.92);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.3);
+            border: 1px solid var(--ungu-sangat-transparan);
+            transition: all 0.4s ease;
+            backdrop-filter: blur(5px);
+            position: relative;
+        }
+
+        /* Efek cahaya bergerak di pinggir kartu */
+        .kartu-produk::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--ungu-sangat-transparan), transparent);
+            transition: 0.8s;
+        }
+
+        .kartu-produk:hover::before {
+            left: 100%;
+        }
+
+        .kartu-produk:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 30px var(--ungu-transparan), 0 0 15px var(--ungu-sangat-transparan);
+            border-color: var(--ungu-muda);
+        }
+
+        .gambar-produk {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            background-color: #f3f4f6;
+        }
+
+        .info-produk {
+            padding: 20px;
+        }
+
+        .kode-produk {
+            display: inline-block;
+            background-color: var(--ungu-transparan);
+            color: var(--ungu-muda);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            border: 1px solid var(--ungu-sangat-transparan);
+        }
+
+        .nama-produk {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--ungu-gelap);
+            margin-bottom: 10px;
+        }
+
+        .harga-produk {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--ungu-muda);
+            margin-bottom: 18px;
+            text-shadow: 0 0 5px var(--ungu-transparan);
+        }
+
+        .btn-beli {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #25d366, #1da851);
+            color: var(--putih);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-beli:hover {
+            transform: scale(0.98);
+            box-shadow: 0 0 15px rgba(37, 211, 102, 0.5);
+        }
+
+        .tidak-ada {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--putih);
+            opacity: 0.8;
+            text-shadow: 0 0 8px rgba(0,0,0,0.3);
+        }
+        /* ===== PERUBAHAN KOTAK PENCARIAN DENGAN IKON ===== */
+.input-cari-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.ikon-cari {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    opacity: 0.7;
+    z-index: 2;
+}
+
+.kotak-cari {
+    width: 100%;
+    padding: 13px 22px 13px 50px; /* Tambah ruang di kiri untuk ikon */
+    border: 2px solid var(--ungu-muda);
+    background-color: rgba(255,255,255,0.9);
+    color: var(--ungu-gelap);
+    border-radius: 30px;
+    font-size: 16px;
+    outline: none;
+    transition: 0.3s;
+    backdrop-filter: blur(10px);
+}
+.info-hasil {
+    text-align: center;
+    color: white;
+    margin: 10px 0;
+    font-size: 14px;
+    opacity: 0.8;
+}
+/* ===== FITUR ZOOM GAMBAR ===== */
+.overlay-zoom {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(12, 4, 25, 0.92);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(8px);
+}
+
+.overlay-zoom.aktif {
+    display: flex;
+}
+
+.gambar-zoom {
+    max-width: 90%;
+    max-height: 85%;
+    border-radius: 12px;
+    box-shadow: 0 0 30px var(--ungu-muda);
+    border: 2px solid var(--ungu-transparan);
+    transform: scale(0.8);
+    transition: transform 0.3s ease;
+}
+
+.overlay-zoom.aktif .gambar-zoom {
+    transform: scale(1);
+}
+
+.tutup-zoom {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    background: var(--ungu-muda);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 15px rgba(0,0,0,0.4);
+    transition: 0.3s;
+}
+
+.tutup-zoom:hover {
+    background: var(--ungu-cerah);
+    transform: rotate(90deg);
+}
+
+.gambar-produk {
+    cursor: zoom-in; /* Ubah kursor menjadi ikon perbesar */
+    transition: opacity 0.3s;
+}
+
+.gambar-produk:hover {
+    opacity: 0.9;
+}
+
+    </style>
+</head>
+<body>
+
+    <!-- LAPISAN AURA BERGERAK -->
+    <div class="aura-container">
+        <div class="aura aura-1"></div>
+        <div class="aura aura-2"></div>
+        <div class="aura aura-3"></div>
+    </div>
+
+    <header>
+        <h1>TOKO ONLINE YOBSZ</h1>
+        <p>Jual Beli Aman & Terpercaya</p>
+    </header>
+    
+<!-- LAYAR ZOOM GAMBAR -->
+<div class="overlay-zoom" id="overlayZoom">
+    <button class="tutup-zoom" id="tutupZoom">×</button>
+    <img src="" alt="Zoom Produk" class="gambar-zoom" id="gambarZoom">
+</div>
+
+    <!-- KOTAK PENCARIAN -->
+   <div class="input-cari-wrapper">
+    <img src="https://cdn-icons-png.flaticon.com/512/54/54481.png" alt="Cari" class="ikon-cari">
+    <input type="text" id="inputCari" class="kotak-cari" placeholder="Cari berdasarkan Kode atau Nama Barang...">
+</div>
+<!-- BARIS YANG DITAMBAHKAN -->
+<div class="info-hasil">Menampilkan <span id="jumlahHasil">0</span> barang</div>
+
+
+
+    <div class="kontainer-produk" id="daftarProduk">
+        <!-- Barang muncul di sini -->
+    </div>
+
+<script>
+    // ===== DAFTAR BARANG =====
+    const DAFTAR_BARANG = [
+        {
+            kode: "YBID0001",
+            foto: "/20251018_114615.png",
+            nama: "Jasa buat logo",
+            harga: "5K/1Logo",
+            wa: "087872273979"
+        },
+         {
+            kode: "YBID0002",
+            foto: "/Screenshot_20260504-143524_Chrome.jpg",
+            nama: "Jasa Pembuatan Website Metode-Pembayaran",
+            harga: "10K",
+            wa: "087872273979"
+        },
+    ];
+
+    // ===== FUNGSI ZOOM GAMBAR =====
+    function aktifkanZoom() {
+        const semuaGambar = document.querySelectorAll('.gambar-produk');
+        const overlay = document.getElementById('overlayZoom');
+        const gambarZoom = document.getElementById('gambarZoom');
+        const tombolTutup = document.getElementById('tutupZoom');
+
+        semuaGambar.forEach(gambar => {
+            gambar.addEventListener('click', function() {
+                gambarZoom.src = this.src;
+                gambarZoom.alt = this.alt;
+                overlay.classList.add('aktif');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        function tutupZoom() {
+            overlay.classList.remove('aktif');
+            document.body.style.overflow = 'auto';
+        }
+
+        tombolTutup.addEventListener('click', tutupZoom);
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) tutupZoom();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && overlay.classList.contains('aktif')) tutupZoom();
+        });
+    }
+
+    // ===== FUNGSI TAMPILKAN BARANG =====
+    function tampilkanBarang(hasilPencarian) {
+        const wadah = document.getElementById('daftarProduk');
+        const jumlahTeks = document.getElementById('jumlahHasil');
+        wadah.innerHTML = '';
+
+        jumlahTeks.innerText = hasilPencarian.length;
+
+        if (hasilPencarian.length === 0) {
+            wadah.innerHTML = `
+                <div class="tidak-ada">
+                    <h3>😞 Barang tidak ditemukan</h3>
+                    <p>Coba kata kunci lain</p>
+                </div>
+            `;
+            aktifkanZoom();
+            return;
+        }
+
+        hasilPencarian.forEach(barang => {
+            const elemen = document.createElement('div');
+            elemen.className = 'kartu-produk';
+
+            const pesanWA = `Halo admin, saya berminat untuk membeli produk:
+📌 Kode Produk : ${barang.kode}
+📦 Nama Barang : ${barang.nama}
+💸 Harga : Rp ${barang.harga.toLocaleString('id-ID')}
+
+Mohon info lanjut, terima kasih.`;
+
+            const pesanEncode = encodeURIComponent(pesanWA);
+            const waLink = `https://wa.me/62${barang.wa.substring(1)}?text=${pesanEncode}`;
+
+            elemen.innerHTML = `
+                <img src="${barang.foto}" class="gambar-produk" alt="${barang.nama}">
+                <div class="info-produk">
+                    <span class="kode-produk">${barang.kode}</span>
+                    <h3 class="nama-produk">${barang.nama}</h3>
+                    <p class="harga-produk">Rp ${barang.harga.toLocaleString('id-ID')}</p>
+                    <a href="${waLink}" target="_blank" class="btn-beli">
+                        <span>💬</span> Minat? Chat WhatsApp
+                    </a>
+                </div>
+            `;
+            wadah.appendChild(elemen);
+        });
+
+        // Panggil fungsi zoom setelah barang ditampilkan
+        aktifkanZoom();
+    }
+
+    // ===== FUNGSI PENCARIAN =====
+    function cariBarang(kataKunci) {
+        kataKunci = kataKunci.toLowerCase().trim();
+        if (kataKunci === '') return DAFTAR_BARANG;
+
+        return DAFTAR_BARANG.filter(barang => {
+            return barang.kode.toLowerCase().includes(kataKunci) || 
+                   barang.nama.toLowerCase().includes(kataKunci);
+        });
+    }
+
+    // Jalankan pencarian saat mengetik
+    document.getElementById('inputCari').addEventListener('input', function() {
+        tampilkanBarang(cariBarang(this.value));
+    });
+
+    // Tampilkan semua barang saat buka halaman
+    window.onload = () => tampilkanBarang(DAFTAR_BARANG);
+</script>
+
+
+
+</body>
+  </html>
